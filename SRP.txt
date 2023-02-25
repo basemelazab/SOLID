@@ -1,0 +1,33 @@
+ 
+// does not follow SRP
+
+
+public class RegisterService
+{
+    public void RegisterUser(string username)
+    {
+        if (username == "admin")
+            throw new InvalidOperationException();
+
+        SqlConnection connection = new SqlConnection();
+        connection.Open();
+        SqlCommand command = new SqlCommand("INSERT INTO [...]");//Insert user into database. 
+
+        SmtpClient client = new SmtpClient("smtp.myhost.com");
+        client.Send(new MailMessage()); //Send a welcome email. 
+    }
+}
+
+//The program above does not follow SRP because RegisterUser does three different jobs: register a user, connect to the database, and send an email.
+
+
+
+public void RegisterUser(string username)
+{
+    if (username == "admin")
+        throw new InvalidOperationException();
+
+    _userRepository.Insert(...);
+    
+    _emailService.Send(...);
+}
